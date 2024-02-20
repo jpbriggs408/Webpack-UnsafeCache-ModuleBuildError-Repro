@@ -4,7 +4,7 @@ This repository contains a minimal setup to reproduce an issue encountered with 
 
 ## Issue Description
 
-The development server fails to recognize dynamic file renames/extension changes, leading to module resolution errors.
+The development server fails to recognize dynamic file renames/extension changes, leading to module resolution errors. Please see [here](https://github.com/webpack/webpack/discussions/18089) for more context on the issue.
 
 ## Getting Started
 
