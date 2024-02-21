@@ -28,3 +28,9 @@ The app is served at `http://localhost:8080` by default
 2. When `src/App.jsx` is changed to `src/App.tsx`, the dev server fails.
 
 ![image](https://github.com/jpbriggs408/Webpack-UnsafeCache-ModuleBuildError-Repro/assets/8880358/dc82f43b-ac1f-4814-94ad-04f49210b4ef)
+
+### Notes
+
+When modifying a TS file, you will need to run `tsc` in order for those changes to be picked up by Webpack with this simple config. For example, let's say we modify `CustomUnsafeCachePlugin.ts` and want to start the dev server to see our changes:
+
+`npx tsc ./src/utils/CustomUnsafeCachePlugin.ts && npm run start`

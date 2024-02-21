@@ -1,4 +1,9 @@
+#!/usr/bin/env node
+'use strict';
+
 const path = require('path');
+
+const CustomCachePlugin = require('./src/utils/CustomUnsafeCachePlugin');
 
 module.exports = {
   mode: 'development',
@@ -15,7 +20,8 @@ module.exports = {
     extensionAlias: {
       '.jsx': ['.tsx', '.jsx']
     },
-    unsafeCache: true,
+    plugins: [new CustomCachePlugin()],
+    // unsafeCache: true,
   },
   module: {
     rules: [
