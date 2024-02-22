@@ -20,8 +20,8 @@ module.exports = {
     extensionAlias: {
       '.jsx': ['.tsx', '.jsx']
     },
-    plugins: [new CustomCachePlugin()],
-    // unsafeCache: true,
+    // plugins: [new CustomCachePlugin()],
+    unsafeCache: true,
   },
   module: {
     rules: [
