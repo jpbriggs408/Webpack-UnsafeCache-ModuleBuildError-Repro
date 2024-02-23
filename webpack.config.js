@@ -1,4 +1,19 @@
 const path = require('path');
+const MeowMeowUnsafeCachePlugin = require('./src/utils/MeowMeowUnsafeCachePlugin.js');
+
+const plugins = [];
+const unsafeCacheSingleton = {};
+const source = 'resolve';
+
+plugins.push(
+    new MeowMeowUnsafeCachePlugin(
+      source,
+      ()=>true,
+      unsafeCacheSingleton,
+      false,
+      `new-${source}`
+    )
+  );
 
 module.exports = {
   mode: 'development',
@@ -15,7 +30,8 @@ module.exports = {
     extensionAlias: {
       '.jsx': ['.tsx', '.jsx']
     },
-    unsafeCache: true,
+    unsafeCache: false,
+    plugins
   },
   module: {
     rules: [
