@@ -3,7 +3,23 @@
 
 const path = require('path');
 
-const CustomCachePlugin = require('./src/utils/CustomUnsafeCachePlugin');
+const MeowMeowUnsafeCachePlugin = require('./src/utils/MeowMeowUnsafeCachePlugin.js');
+const ParsePlugin = require("./node_modules/enhanced-resolve/lib/ParsePlugin.js");
+
+const plugins = [];
+const unsafeCacheSingleton = {};
+const source = 'resolve';
+const resolveOptions = {};
+
+plugins.push(
+    new MeowMeowUnsafeCachePlugin(
+      source,
+      ()=>true,
+      unsafeCacheSingleton,
+      false,
+      `new-${source}`
+    )
+  );
 
 module.exports = {
   mode: 'development',
@@ -20,8 +36,8 @@ module.exports = {
     extensionAlias: {
       '.jsx': ['.tsx', '.jsx']
     },
-    // plugins: [new CustomCachePlugin()],
-    unsafeCache: true,
+    plugins,
+    unsafeCache: false,
   },
   module: {
     rules: [
