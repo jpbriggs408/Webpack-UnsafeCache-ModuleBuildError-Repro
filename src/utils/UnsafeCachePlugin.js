@@ -13,6 +13,8 @@
 /** @typedef {import("./Resolver").ResolveContextYield} ResolveContextYield */
 /** @typedef {{[k: string]: ResolveRequest | ResolveRequest[] | undefined}} Cache */
 
+var fs = require("fs");
+
 /**
  * @param {string} type type of cache
  * @param {ResolveRequest} request request
@@ -55,9 +57,6 @@ module.exports = class UnsafeCachePlugin {
 		resolver
 			.getHook(this.source)
 			.tapAsync("UnsafeCachePlugin", (request, resolveContext, callback) => {
-				// console.log(request.request);
-				// console.log(request.path);
-				// console.log(request.context);
 				if (!this.filterPredicate(request)) return callback();
 				const isYield = typeof resolveContext.yield === "function";
 				const cacheId = getCacheId(
@@ -67,16 +66,21 @@ module.exports = class UnsafeCachePlugin {
 				);
 				const cacheEntry = this.cache[cacheId];
 				if (cacheEntry) {
-					if (isYield) {
-						const yield_ = /** @type {Function} */ (resolveContext.yield);
-						if (Array.isArray(cacheEntry)) {
-							for (const result of cacheEntry) yield_(result);
-						} else {
-							yield_(cacheEntry);
+					if (!fs.existsSync(cacheEntry.path)) {
+						console.log("Cached file no longer exists, clearing cache for: ", cacheId);
+						delete this.cache[cacheId];
+					} else {
+						if (isYield) {
+							const yield_ = /** @type {Function} */ (resolveContext.yield);
+							if (Array.isArray(cacheEntry)) {
+								for (const result of cacheEntry) yield_(result);
+							} else {
+								yield_(cacheEntry);
+							}
+							return callback(null, null);
 						}
-						return callback(null, null);
+						return callback(null, /** @type {ResolveRequest} */ (cacheEntry));
 					}
-					return callback(null, /** @type {ResolveRequest} */ (cacheEntry));
 				}
 
 				/** @type {ResolveContextYield|undefined} */
