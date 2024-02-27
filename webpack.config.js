@@ -1,5 +1,21 @@
 const path = require('path');
 
+const fileSystemAwareCache = new Proxy({},{
+    get(target, key, receiver) {
+        const entry = Reflect.get(target, key, receiver);
+        if (entry && fs.existsSync(entry.path)) {
+            return entry;
+        }
+
+        Reflect.deleteProperty(target, key);
+        return undefined;
+    },
+  
+    set(target, key, value, receiver) {
+        return Reflect.set(target, key, value, receiver);
+      }
+});
+
 module.exports = {
   mode: 'development',
   entry: './src/index.jsx',
@@ -15,7 +31,7 @@ module.exports = {
     extensionAlias: {
       '.jsx': ['.tsx', '.jsx']
     },
-    unsafeCache: true,
+    unsafeCache: fileSystemAwareCache,
   },
   module: {
     rules: [
